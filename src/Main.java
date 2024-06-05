@@ -24,7 +24,7 @@ public class Main {
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
         );
 
-        String[] inputArray = input.split(" ");
+        String[] inputArray = input.trim().split(" ");
         if (inputArray.length != 3) {
             throw new Exception("Некорректный формат ввода. Ожидается формат: 'a + b'.");
         }
