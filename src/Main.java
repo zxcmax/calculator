@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.*;
 
 public class Main {
@@ -7,12 +6,12 @@ public class Main {
         try {
             System.out.println(calc(scanner.nextLine()));
         } catch (Exception e) {
-            System.out.println("Ошибка: Вы ввели некорректные данные.");
+            System.out.println("Ошибка: " + e.getMessage());
         }
     }
 
-    public static String calc(String input) throws IOException {
-        String[] romanNumbers = {
+    public static String calc(String input) throws Exception {
+        List<String> romanNumbers = Arrays.asList(
                 "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
                 "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
                 "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
@@ -23,64 +22,59 @@ public class Main {
                 "LXXI", "LXXII", "LXXIII", "LXXIV", "LXXV", "LXXVI", "LXXVII", "LXXVIII", "LXXIX", "LXXX",
                 "LXXXI", "LXXXII", "LXXXIII", "LXXXIV", "LXXXV", "LXXXVI", "LXXXVII", "LXXXVIII", "LXXXIX", "XC",
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
-        };
-        List<String> allowedRomanNumbers = Arrays.asList(Arrays.copyOfRange(romanNumbers, 0, 10));
-
-        Integer[] arabicNumbers = new Integer[100];
-        for (int i = 0; i < 100; i++) {
-            arabicNumbers[i] = i + 1;
-        }
-        List<Integer> allowedArabicNumbers = Arrays.asList(Arrays.copyOfRange(arabicNumbers, 0, 10));
-
-        Map<String, Integer> romanArabicNumbers = new HashMap<>();
-        for (int i = 0; i < 100; i++) {
-            romanArabicNumbers.put(romanNumbers[i], arabicNumbers[i]);
-        }
+        );
 
         String[] inputArray = input.split(" ");
         if (inputArray.length != 3) {
-            throw new IOException();
+            throw new Exception("Некорректный формат ввода. Ожидается формат: 'a + b'.");
         }
 
         String firstNumber = inputArray[0];
         String operation = inputArray[1];
         String secondNumber = inputArray[2];
 
+        int first;
+        int second;
         int intermediateResult;
         boolean isRomanNumber = false;
 
-        if (allowedRomanNumbers.contains(firstNumber) && allowedRomanNumbers.contains(secondNumber)) {
-            int first = romanArabicNumbers.get(firstNumber);
-            int second = romanArabicNumbers.get(secondNumber);
+        if (romanNumbers.contains(firstNumber) && romanNumbers.contains(secondNumber)) {
+            first = romanNumbers.indexOf(firstNumber) + 1;
+            second = romanNumbers.indexOf(secondNumber) + 1;
             isRomanNumber = true;
-            intermediateResult = getIntermediateResult(operation, first, second);
         } else {
-            int first = Integer.parseInt(firstNumber);
-            int second = Integer.parseInt(secondNumber);
-            if (allowedArabicNumbers.contains(first) && allowedArabicNumbers.contains(second)) {
-                intermediateResult = getIntermediateResult(operation, first, second);
-            } else {
-                throw new IOException();
+            try {
+                first = Integer.parseInt(firstNumber);
+                second = Integer.parseInt(secondNumber);
+
+            } catch (NumberFormatException e) {
+                throw new Exception("Некорректный формат чисел. Числа должны быть только арабскими или только римскими от 1 до 10 (от I до X) включительно.");
             }
         }
 
+        if (first < 1 || first > 10 || second < 1 || second > 10) {
+            throw new Exception("Числа должны быть в диапазоне от 1 до 10 (от I до X) включительно.");
+        }
+
+        intermediateResult = getIntermediateResult(operation, first, second);
+
         if (isRomanNumber) {
             if (intermediateResult < 1) {
-                throw new IOException();
+                throw new Exception("Результат работы с римскими числами не может быть меньше I.");
             }
-            return romanNumbers[intermediateResult - 1];
+            return romanNumbers.get(intermediateResult - 1);
         } else {
             return Integer.toString(intermediateResult);
         }
     }
 
-    private static int getIntermediateResult(String operation, int first, int second) throws IOException {
+    private static int getIntermediateResult(String operation, int first, int second) throws Exception {
         return switch (operation) {
             case "+" -> first + second;
             case "-" -> first - second;
             case "*" -> first * second;
             case "/" -> first / second;
-            default -> throw new IOException();
+            default -> throw new Exception("Некорректная операция. Допустимые операции: +, -, *, /.");
         };
     }
 }
