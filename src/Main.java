@@ -31,6 +31,10 @@ public class Main {
 
         String firstNumber = inputArray[0];
         String secondNumber = inputArray[1];
+        if (firstNumber.split(" ").length != 1 || secondNumber.split(" ").length != 1){
+            throw new Exception("Некорректный формат ввода. Ожидается формат: 'a + b'.");
+        }
+
         String operation = input.replaceAll("[^+\\-*/]", "");
 
         int first;
