@@ -56,7 +56,9 @@ public class Main {
             }
         }
 
-        if (first < 1 || first > 10 || second < 1 || second > 10) {
+        final int MIN_LENGTH = 1;
+        final int MAX_LENGTH = 10;
+        if (first < MIN_LENGTH || first > MAX_LENGTH || second < MIN_LENGTH || second > MAX_LENGTH) {
             throw new Exception("Числа должны быть в диапазоне от 1 до 10 (от I до X) включительно.");
         }
 
