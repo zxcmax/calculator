@@ -24,14 +24,14 @@ public class Main {
                 "XCI", "XCII", "XCIII", "XCIV", "XCV", "XCVI", "XCVII", "XCVIII", "XCIX", "C"
         );
 
-        String[] inputArray = input.trim().split(" ");
-        if (inputArray.length != 3) {
+        String[] inputArray = input.trim().split("\\s*[+\\-*/]\\s*");
+        if (inputArray.length != 2) {
             throw new Exception("Некорректный формат ввода. Ожидается формат: 'a + b'.");
         }
 
         String firstNumber = inputArray[0];
-        String operation = inputArray[1];
-        String secondNumber = inputArray[2];
+        String secondNumber = inputArray[1];
+        String operation = input.replaceAll("[^+\\-*/]", "");
 
         int first;
         int second;
